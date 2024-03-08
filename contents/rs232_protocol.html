@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Low-Level RS232 Protocol &mdash; Acquisition GUI - LEnsE / IOGS 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/lense-training.css?v=5fb7c9f9" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/links.css?v=7a4609b2" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Application-level Protocol" href="app_protocol.html" />
+    <link rel="prev" title="Main steps of a graphical interface design" href="step_by_step.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Acquisition GUI - LEnsE / IOGS
+              <img src="../_static/logo-training_git.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="step_by_step.html">     Main steps</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">RS232 protocol</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">     Low-level RS232 protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#asynchronous-protocol">Asynchronous protocol</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rx-tx-signals">RX/TX signals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#default-frame">Default frame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#baudrate">Baudrate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#serial-terminal">Serial Terminal</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#first-communication-nucleo">First communication / Nucleo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setting-up-a-serial-communication">Setting up a Serial communication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sendind-data-from-external-device-to-computer">Sendind data from external device to computer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing-the-transmission">Testing the transmission</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#python-and-serial-communication">Python and Serial communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyserial-library">Pyserial library</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#listing-communication-ports">Listing communication ports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#accessing-a-specific-port">Accessing a specific port</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#first-console-application-to-collect-data">First console application to collect data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#complete-communication-nucleo">Complete communication / Nucleo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#reading-data-polling-method">Reading data / Polling method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#echo-application">Echo application</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#read-data-interrupt-method">Read data / Interrupt method</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#switch-on-off-the-acquisition-device">Switch On/Off the acquisition device</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#final-program">Final program</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#more-data">More data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="app_protocol.html">     Application-level protocol</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Acquisition GUI - LEnsE / IOGS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Low-Level RS232 Protocol</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/contents/rs232_protocol.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="low-level-rs232-protocol">
+<h1>Low-Level RS232 Protocol<a class="headerlink" href="#low-level-rs232-protocol" title="Link to this heading"></a></h1>
+<section id="asynchronous-protocol">
+<h2>Asynchronous protocol<a class="headerlink" href="#asynchronous-protocol" title="Link to this heading"></a></h2>
+<section id="rx-tx-signals">
+<h3>RX/TX signals<a class="headerlink" href="#rx-tx-signals" title="Link to this heading"></a></h3>
+</section>
+<section id="default-frame">
+<h3>Default frame<a class="headerlink" href="#default-frame" title="Link to this heading"></a></h3>
+</section>
+<section id="baudrate">
+<h3>Baudrate<a class="headerlink" href="#baudrate" title="Link to this heading"></a></h3>
+</section>
+<section id="serial-terminal">
+<h3>Serial Terminal<a class="headerlink" href="#serial-terminal" title="Link to this heading"></a></h3>
+</section>
+</section>
+<section id="first-communication-nucleo">
+<h2>First communication / Nucleo<a class="headerlink" href="#first-communication-nucleo" title="Link to this heading"></a></h2>
+<p>Before venturing into the development of a complete graphical interface able to display data graphics and to send orders to the acquisition board, we will learn how to set up a serial link and transfer data in the two directions.</p>
+<section id="setting-up-a-serial-communication">
+<h3>Setting up a Serial communication<a class="headerlink" href="#setting-up-a-serial-communication" title="Link to this heading"></a></h3>
+<p>To implement a Serial communication port on a <em>Nucleo board</em>, via <em>MBED-OS</em>, a <strong>BufferedSerial</strong> object is required, from the <em>mbed.h</em> library.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;mbed.h&quot;</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="n">BufferedSerial</span><span class="w">      </span><span class="nf">usb_pc</span><span class="p">(</span><span class="n">USBTX</span><span class="p">,</span><span class="w"> </span><span class="n">USBRX</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In this example, the serial link is named <strong>usb_pc</strong> and is based on a virtual RS232 link through the USB cable (the same as for downloading the binary file to the board).</p>
+<p>To create a link with other devices (as BlueTooth HC05 module for example), you can use two others serial ports on the L476RG board :
+- Serial 1 : A4 (TX) / A5 (RX)
+- Serial 4 : A0 (TX) / A1 (RX)</p>
+<p>Differents parameters can be updated on a Serial link. You can set a different data transfer rate, called baudrate, or modify the transmission low-level format of the data.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">usb_pc</span><span class="p">.</span><span class="n">set_baud</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="n">usb_pc</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">SerialBase</span><span class="o">::</span><span class="n">None</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The first function, <strong>set_baud</strong>, permits to change the data transfer rate in bauds.</p>
+<p>The second function, <strong>set_format</strong>, permits to change the data format. The firts argument is the number of data bits (1 byte is 8 bits). The second argument is to set a parity value (default is None). The third argument is to set a stop bit (default value is 1).</p>
+</section>
+<section id="sendind-data-from-external-device-to-computer">
+<h3>Sendind data from external device to computer<a class="headerlink" href="#sendind-data-from-external-device-to-computer" title="Link to this heading"></a></h3>
+<p>To send data to the computer, <strong>write</strong> function from the <em>BufferedSerial</em> class can be used. Two arguments are required : a pointer to a memory space where data are stored as bytes and the amount of data (in bytes) to send.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kt">char</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;a&#39;</span><span class="p">;</span>
+<span class="linenos">2</span><span class="n">usb_pc</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This first example permits to send one byte at a time (here is the ‘a’ character) through the RS232 serial port.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kt">char</span><span class="w"> </span><span class="n">data</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="sc">&#39;a&#39;</span><span class="p">,</span><span class="sc">&#39;0&#39;</span><span class="p">,</span><span class="sc">&#39;b&#39;</span><span class="p">,</span><span class="sc">&#39;5&#39;</span><span class="p">,</span><span class="sc">&#39;!&#39;</span><span class="p">};</span>
+<span class="linenos">2</span><span class="n">usb_pc</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This second example permits to send 5 bytes at a time through the RS232 serial port.</p>
+</section>
+<section id="testing-the-transmission">
+<h3>Testing the transmission<a class="headerlink" href="#testing-the-transmission" title="Link to this heading"></a></h3>
+<p>To test the communication between the Nucleo board and the computer, a simple program that send periodically a character or a string of characters can be used.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;mbed.h&quot;</span>
+<span class="linenos"> 2</span><span class="n">BufferedSerial</span><span class="w">      </span><span class="nf">usb_pc</span><span class="p">(</span><span class="n">USBTX</span><span class="p">,</span><span class="w"> </span><span class="n">USBRX</span><span class="p">);</span>
+<span class="linenos"> 3</span><span class="kt">char</span><span class="w">    </span><span class="n">data</span><span class="p">;</span>
+<span class="linenos"> 4</span><span class="kt">char</span><span class="w">    </span><span class="n">data2</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="sc">&#39;a&#39;</span><span class="p">,</span><span class="sc">&#39;0&#39;</span><span class="p">,</span><span class="sc">&#39;b&#39;</span><span class="p">,</span><span class="sc">&#39;5&#39;</span><span class="p">,</span><span class="sc">&#39;!&#39;</span><span class="p">};</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="cm">/* MAIN PROGRAM */</span>
+<span class="linenos"> 7</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="linenos"> 8</span><span class="p">{</span>
+<span class="linenos"> 9</span><span class="w">        </span><span class="c1">// Initialization of Serial communication port</span>
+<span class="linenos">10</span><span class="w">        </span><span class="n">usb_pc</span><span class="p">.</span><span class="n">set_baud</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+<span class="linenos">11</span><span class="w">        </span><span class="n">usb_pc</span><span class="p">.</span><span class="n">set_format</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">SerialBase</span><span class="o">::</span><span class="n">None</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span>
+<span class="linenos">14</span><span class="w">        </span><span class="p">{</span>
+<span class="linenos">15</span><span class="w">                </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;a&#39;</span><span class="p">;</span>
+<span class="linenos">16</span><span class="w">                </span><span class="n">usb_pc</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="linenos">17</span><span class="w">                </span><span class="n">thread_sleep_for</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+<span class="linenos">18</span><span class="w">                </span><span class="n">usb_pc</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">data2</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span>
+<span class="linenos">19</span><span class="w">                </span><span class="n">thread_sleep_for</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+<span class="linenos">20</span><span class="w">        </span><span class="p">}</span>
+<span class="linenos">21</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>In this example, the ‘a’ character followed by the {a0b5!} string 1 second later are sent from the Nucleo board at a baudrate of 115200 bauds, in the default format (data are on 8 bits with no parity bit and 1 stop bit).</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>But computers are not natively able to read serial communication port. An application that read the hardware buffer of the communication port is required, as for example <a class="reference external" href="https://tera-term.fr.softonic.com/">Tera Term</a></p>
+<p>By setting up a serial terminal correctly (same baudrate…), the result is given in the next figure.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="_static/rs232_first_test.png"><img alt="RS232 - Nucleo board test" src="_static/rs232_first_test.png" style="width: 90%;" /></a>
+<figcaption>
+<p><span class="caption-text">First communication test between a computer and a Nucleo board.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The computer receives each second, alternatively, ‘a’ character and {a0b5!} string.</p>
+</section>
+</section>
+<section id="python-and-serial-communication">
+<h2>Python and Serial communication<a class="headerlink" href="#python-and-serial-communication" title="Link to this heading"></a></h2>
+<p>Serial terminals are not user-friendly for developing a complete system able to collect data and display them in a professionnal graphics.</p>
+<section id="pyserial-library">
+<h3>Pyserial library<a class="headerlink" href="#pyserial-library" title="Link to this heading"></a></h3>
+</section>
+<section id="listing-communication-ports">
+<h3>Listing communication ports<a class="headerlink" href="#listing-communication-ports" title="Link to this heading"></a></h3>
+</section>
+<section id="accessing-a-specific-port">
+<h3>Accessing a specific port<a class="headerlink" href="#accessing-a-specific-port" title="Link to this heading"></a></h3>
+</section>
+<section id="first-console-application-to-collect-data">
+<h3>First console application to collect data<a class="headerlink" href="#first-console-application-to-collect-data" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">serial</span> <span class="kn">import</span> <span class="n">Serial</span>
+<span class="linenos"> 2</span><span class="kn">import</span> <span class="nn">serial.tools.list_ports</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos"> 5</span>        <span class="n">ports</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">tools</span><span class="o">.</span><span class="n">list_ports</span><span class="o">.</span><span class="n">comports</span><span class="p">()</span>
+<span class="linenos"> 6</span>        <span class="c1"># To obtain the list of the communication ports</span>
+<span class="linenos"> 7</span>        <span class="k">for</span> <span class="n">port</span><span class="p">,</span> <span class="n">desc</span><span class="p">,</span> <span class="n">hwid</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ports</span><span class="p">):</span>
+<span class="linenos"> 8</span>                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">desc</span><span class="p">))</span>
+<span class="linenos"> 9</span>        <span class="c1"># To select the port to use</span>
+<span class="linenos">10</span>        <span class="n">selectPort</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Select a COM port : &quot;</span><span class="p">)</span>
+<span class="linenos">11</span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Port Selected : COM</span><span class="si">{</span><span class="n">selectPort</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">12</span>        <span class="c1"># To open the serial communication at a specific baudrate</span>
+<span class="linenos">13</span>        <span class="n">serNuc</span> <span class="o">=</span> <span class="n">Serial</span><span class="p">(</span><span class="s1">&#39;COM&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">selectPort</span><span class="p">),</span> <span class="mi">115200</span><span class="p">)</span>  <span class="c1"># Under Windows only</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span>        <span class="c1"># number of bytes to collecting</span>
+<span class="linenos">16</span>        <span class="n">nb_bytes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter the number of bytes to collect : &quot;</span><span class="p">))</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span>        <span class="c1"># collecting data byte after byte</span>
+<span class="linenos">19</span>        <span class="n">nb_bytes_collected</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">20</span>        <span class="k">while</span><span class="p">(</span><span class="n">nb_bytes_collected</span> <span class="o">&lt;</span> <span class="n">nb_bytes</span><span class="p">):</span>
+<span class="linenos">21</span>                <span class="c1"># Waiting new data</span>
+<span class="linenos">22</span>                <span class="k">while</span> <span class="n">serNuc</span><span class="o">.</span><span class="n">inWaiting</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">23</span>                        <span class="k">pass</span>
+<span class="linenos">24</span>                <span class="n">data_rec</span> <span class="o">=</span> <span class="n">serNuc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># bytes</span>
+<span class="linenos">25</span>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;D</span><span class="si">{</span><span class="n">nb_bytes_collected</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="n">data_rec</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="linenos">26</span>                <span class="n">nb_bytes_collected</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span>        <span class="c1"># Close the serial port</span>
+<span class="linenos">29</span>        <span class="n">serNuc</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="complete-communication-nucleo">
+<h2>Complete communication / Nucleo<a class="headerlink" href="#complete-communication-nucleo" title="Link to this heading"></a></h2>
+<p>In the previous part, communication was tested <strong>only in one direction</strong> : from the Nucleo board (or acquisition device) to the computer.</p>
+<p>In a complete application it’s necessary to <strong>also send commands</strong> from the computer to the acquisition board.</p>
+<section id="reading-data-polling-method">
+<h3>Reading data / Polling method<a class="headerlink" href="#reading-data-polling-method" title="Link to this heading"></a></h3>
+<p>The RS232 protocol is <strong>asynchronous</strong>, meaning that there is no clock transmitted between the two nodes of the network. But there is also no periodicity in the frame transmission.</p>
+<p>When an RS232 signal is received by a node (detected by a start bit sequence on the communication RX port), the data is stored in an hardware buffer.</p>
+<p>To know if a byte is received (i.e. stored in the hardware buffer), <strong>readable</strong> function from the <em>BufferedSerial</em> class can be used. This function returns true if a byte can be read, false otherwise.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">){</span>
+<span class="linenos">2</span><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">usb_pc</span><span class="p">.</span><span class="n">readable</span><span class="p">()){</span>
+<span class="linenos">3</span><span class="w">                </span><span class="c1">// almost one byte is readable</span>
+<span class="linenos">4</span><span class="w">        </span><span class="p">}</span>
+<span class="linenos">5</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>In the previous example</p>
+<p>To receive data from the computer, <em>read</em> function from the <em>BufferedSerial</em> class can be used. Two arguments are required : a pointer to a memory space where data will be stored as bytes and the amount of data (in bytes) to send.</p>
+</section>
+<section id="echo-application">
+<h3>Echo application<a class="headerlink" href="#echo-application" title="Link to this heading"></a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">){</span>
+<span class="linenos">2</span><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">usb_pc</span><span class="p">.</span><span class="n">readable</span><span class="p">()){</span>
+<span class="linenos">3</span><span class="w">                </span><span class="n">usb_pc</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="linenos">4</span><span class="w">                </span><span class="n">usb_pc</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="linenos">5</span><span class="w">        </span><span class="p">}</span>
+<span class="linenos">6</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="read-data-interrupt-method">
+<h3>Read data / Interrupt method<a class="headerlink" href="#read-data-interrupt-method" title="Link to this heading"></a></h3>
+</section>
+</section>
+<section id="switch-on-off-the-acquisition-device">
+<h2>Switch On/Off the acquisition device<a class="headerlink" href="#switch-on-off-the-acquisition-device" title="Link to this heading"></a></h2>
+<section id="final-program">
+<h3>Final program<a class="headerlink" href="#final-program" title="Link to this heading"></a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;mbed.h&quot;</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="n">BufferedSerial</span><span class="w">      </span><span class="nf">usb_pc</span><span class="p">(</span><span class="n">USBTX</span><span class="p">,</span><span class="w"> </span><span class="n">USBRX</span><span class="p">);</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kt">void</span><span class="w"> </span><span class="nf">usb_pc_ISR</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+<span class="linenos"> 6</span><span class="w">        </span><span class="kt">char</span><span class="w"> </span><span class="n">rec_data_pc</span><span class="p">;</span>
+<span class="linenos"> 7</span><span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">rec_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos"> 8</span><span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">usb_pc</span><span class="p">.</span><span class="n">readable</span><span class="p">()){</span>
+<span class="linenos"> 9</span><span class="w">                </span><span class="n">rec_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">usb_pc</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rec_data_pc</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="linenos">10</span><span class="w">                </span><span class="n">usb_pc</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rec_data_pc</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="linenos">11</span><span class="w">                </span><span class="n">rec_data_pc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">&#39;c&#39;</span><span class="p">;</span>
+<span class="linenos">12</span><span class="w">                </span><span class="n">usb_pc</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="o">&amp;</span><span class="n">rec_data_pc</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="linenos">13</span><span class="w">        </span><span class="p">}</span>
+<span class="linenos">14</span><span class="p">}</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="linenos">17</span><span class="p">{</span>
+<span class="linenos">18</span><span class="w">        </span><span class="n">usb_pc</span><span class="p">.</span><span class="n">set_baud</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+<span class="linenos">19</span><span class="w">        </span><span class="n">usb_pc</span><span class="p">.</span><span class="n">sigio</span><span class="p">(</span><span class="n">callback</span><span class="p">(</span><span class="n">usb_pc_ISR</span><span class="p">));</span>
+<span class="linenos">20</span><span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">){}</span>
+<span class="linenos">21</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="more-data">
+<h2>More data<a class="headerlink" href="#more-data" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="step_by_step.html" class="btn btn-neutral float-left" title="Main steps of a graphical interface design" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="app_protocol.html" class="btn btn-neutral float-right" title="Application-level Protocol" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Julien Villemejane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

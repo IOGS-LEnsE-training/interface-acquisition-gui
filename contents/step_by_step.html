@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Main steps of a graphical interface design &mdash; Acquisition GUI - LEnsE / IOGS 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/lense-training.css?v=5fb7c9f9" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/links.css?v=7a4609b2" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Low-Level RS232 Protocol" href="rs232_protocol.html" />
+    <link rel="prev" title="Acquisition GUI’s documentation" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Acquisition GUI - LEnsE / IOGS
+              <img src="../_static/logo-training_git.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">     Main steps</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cahier-des-charges">Cahier des charges</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#main-steps-of-the-design">Main steps of the design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#commandes-et-donnees">Commandes et données</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#data-quantification">Data quantification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#frames">Frames</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#commands">Commands</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#improvements">Improvements</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">RS232 protocol</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rs232_protocol.html">     Low-level RS232 protocol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app_protocol.html">     Application-level protocol</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Acquisition GUI - LEnsE / IOGS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Main steps of a graphical interface design</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/contents/step_by_step.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="main-steps-of-a-graphical-interface-design">
+<h1>Main steps of a graphical interface design<a class="headerlink" href="#main-steps-of-a-graphical-interface-design" title="Link to this heading"></a></h1>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>This application and its documentation website are still works in progress</p>
+</div>
+<p>On se propose ici d’étudier la conception d’une application graphique permettant de récupérer une série de données acquises par l’intermédiaire d’une carte d’acquisition.</p>
+<p>La carte d’acquisition (AB) sera pilotée à l’aide d’un protocole série standard.</p>
+<section id="cahier-des-charges">
+<h2>Cahier des charges<a class="headerlink" href="#cahier-des-charges" title="Link to this heading"></a></h2>
+<p>Le système à réaliser devra permettre :
+* d’<strong>initialiser</strong> la carte d’acquisition
+* de lancer une <strong>acquisition manuelle</strong> point par point (à la demande de l’utilisateur) et d’afficher la valeur obtenue
+* de lancer une <strong>acquisition automatique</strong> sur un ensemble de N points à une fréquence d’échantillonnage Fe (dans la gamme de fréquence compatible avec la carte d’acquisition), et pour cela :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>d’envoyer un ordre de début d’acquisition (avec spécification des paramètres N et Fe)</p></li>
+<li><p>d’afficher l’ensemble des points sur un graphique</p></li>
+<li><p>de sauvegarder les paramètres et les valeurs dans un fichier CSV</p></li>
+</ul>
+</div></blockquote>
+<p>La fréquence d’échantillonnage pourra être paramétrée entre 100~Hz et 10~kHz (valeurs limite atteignable sur une Nucléo L476RG).</p>
+<p>Le nombre d’échantillons pourra être paramétré entre 100 et 10000.</p>
+<p>Les échantillons seront codés sur 12 bits.</p>
+</section>
+<section id="main-steps-of-the-design">
+<h2>Main steps of the design<a class="headerlink" href="#main-steps-of-the-design" title="Link to this heading"></a></h2>
+<p>Les grandes étapes sont les suivantes :</p>
+<ul class="simple">
+<li><p>Comprendre les bases du protocole de bas niveau RS232</p></li>
+<li><dl class="simple">
+<dt>Réaliser une première application embarquée, testée à l’aide d’un terminal série, permettant :</dt><dd><ul>
+<li><p>de transmettre un caractère simple</p></li>
+<li><p>de transmettre une chaîne de caractères dont le nombre d’éléments est connu</p></li>
+<li><p>de recevoir une commande simple (caractère)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Réaliser une première application console permettant :</dt><dd><ul>
+<li><p>de recevoir un caractère simple</p></li>
+<li><p>de recevoir une chaîne de caractères dont le nombre d’éléments est connu</p></li>
+<li><p>de transmettre une commande simple (caractère)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Faire une liste des commandes et des données à transmettre dans les deux directions</p></li>
+</ul>
+</section>
+<section id="commandes-et-donnees">
+<h2>Commandes et données<a class="headerlink" href="#commandes-et-donnees" title="Link to this heading"></a></h2>
+<p>La partie la plus critique de cette application est la transmission fiable des N échantillons depuis le PC jusqu’à la carte d’acquisition. La transmission des informations étant parfaitement asynchrone entre les deux noeuds du réseau, il est intéressant d’empaqueter la donnée utile et d’ajouter du contenu permettant d’identifier l’échantillon.</p>
+<p>Il peut par exemple être intéressant d’ajouter le numéro de l’échantillon transmis. En cas d’erreur de transmission d’un échantillon, il est alors possible de le supprimer de l’affichage final ou de redemander spécifiquement à la carte de renvoyer cette échantillon.</p>
+<p>Il est également possible de demander à l’application sur PC d’acquitter chacune des données reçues. Le délai de transmission sera allongé mais les données acquises seront fiables.</p>
+<p>Afin également d’harmoniser les trames de message et de savoir quand débute et se termine un échange de données, il est possible d’ajouter des éléments spécifiques permettant de détecter le début et la fin d’un message. Dans certains protocoles, les commandes et les données ont été conçues pour qu’aucune confusion ne soit possible (dans le cas du MIDI, les types de message sont des octets supérieurs à 128 alors que les données sont des octets inférieurs à 128).</p>
+<p>Enfin, il est possible d’ajouter des éléments de vérification de données de type checksum. Cette méthode sera proposée dans le dernier exemple.</p>
+<section id="data-quantification">
+<h3>Data quantification<a class="headerlink" href="#data-quantification" title="Link to this heading"></a></h3>
+<p>The number of samples can be set up from 100 to 10000, meaning that 2 bytes are necessary to code this information.</p>
+<p>Each sample is a 12 bits value requiring 2 bytes to be transmitted.</p>
+<p>The number of samples to transmit from the PC to the AB is a value of between 100 and 10000, needing 2 bytes.</p>
+<p>The sampling frequency to transmit from the PC to the AB is a value of between 100Hz and 10kHz, needing 2 bytes.</p>
+</section>
+<section id="frames">
+<h3>Frames<a class="headerlink" href="#frames" title="Link to this heading"></a></h3>
+<p>Une première idée pour la conception d’une trame entre l’AB et le PC est la suivante :</p>
+<p>i_msb i_lsb d_msb d_lsb</p>
+<p>i_ms</p>
+</section>
+<section id="commands">
+<h3>Commands<a class="headerlink" href="#commands" title="Link to this heading"></a></h3>
+<p>i = initialization, first connection
+j = initialization but not first try
+c = not connected</p>
+<p>m = manual mode
+a = automatic mode
+d = data in automatic mode</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Initialiazing and testing communication</dt><dd><ul>
+<li><p>communication at 115200 bauds</p></li>
+<li><p>sending <strong>‘i’</strong> from PC to AB</p></li>
+<li><p>answering <strong>‘i’</strong> from AB to PC if connection is ok</p></li>
+<li><p>answering <strong>‘i’</strong> from AB to PC if connection is ok</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li></li>
+</ul>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Ne pas envoyer 2 octets successifs à la même valeur du PC vers AB</p>
+</div>
+</section>
+</section>
+<section id="improvements">
+<h2>Improvements<a class="headerlink" href="#improvements" title="Link to this heading"></a></h2>
+<p>La version 4 est opérationnelle en mode console. Mais lorsqu’on augmente le nombre d’échantillons à acquérir et à transmettre (au-delà de 256 échantillons, lorsque les poids forts peuvent être égaux au poids faible de l’indice lors de la transmission d’une commande), l’application se bloque.</p>
+<p>Il est alors nécessaire de retravailler un peu sur le protocole applicatif afin d’éviter que des données successives soient égales, sinon la carte d’acquisition suppose qu’il s’agit d’un début de trame.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Acquisition GUI’s documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rs232_protocol.html" class="btn btn-neutral float-right" title="Low-Level RS232 Protocol" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Julien Villemejane.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
