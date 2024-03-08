@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath('../../interface'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'Acquisition GUI - LEnsE / IOGS'
+project = 'Acquisition Interface'
 copyright = '2024, Julien Villemejane'
 author = 'Julien Villemejane'
 release = '0.1'
