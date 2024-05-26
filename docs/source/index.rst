@@ -19,7 +19,7 @@ The GitHub repository of this project : `Acquisition GUI <https://github.com/IOG
 
 This set of tutorials is based on PyQt6 library for the graphical interface and on MBED-OS from Arm for the embedded device. 
 
-You can learn how to develop graphical interface in PyQt6 with tutorials from LEnsE : `base_LEnsE_GUI <https://iogs-lense.github.io/base_LEnsE_GUI/>`_
+You can learn how to develop graphical interface in PyQt6 with tutorials from LEnsE : `Python-PyQt-Gui <https://iogs-lense-training.github.io/python-pyqt-gui/>`_
 
 A set of tutorials for MBED-OS and Nucleo boards are available on the LEnsE website : `Nucleo and MBED-OS Tutorials <http://lense.institutoptique.fr/prototyper-avec-nucleo-et-mbed-tutoriels-a-la-carte/>`_
 
